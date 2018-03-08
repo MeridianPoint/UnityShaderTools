@@ -32,3 +32,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+ShaderTools/Library/
+ShaderTools/ProjectSettings/AudioManager.asset
+ShaderTools/ProjectSettings/
+ShaderTools/.vs/
+ShaderTools/UnityPackageManager/
