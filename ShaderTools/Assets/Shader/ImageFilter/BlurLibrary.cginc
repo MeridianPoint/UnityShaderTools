@@ -1,0 +1,7 @@
+﻿#ifndef BLUR_LIBRARY_INCLUDED
+#define BLUR_LIBRARY_INCLUDED
+
+
+
+
+#endif

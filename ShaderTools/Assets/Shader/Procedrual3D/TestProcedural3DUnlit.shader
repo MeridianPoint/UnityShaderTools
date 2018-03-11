@@ -1,17 +1,14 @@
-﻿Shader "Unlit/TestProceduralUnlit"
+﻿Shader "Procedural3D/TestProcedural3DUnlit"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Division("division", Int) = 4
+		_TileSize("tilesize", Vector) = (0.2, 0.2, 0.2, 0.0)
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
+		Tags { "RenderType"="Opaque" }
 		LOD 100
-
-			ZWrite Off
-			Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass
 		{
@@ -22,7 +19,7 @@
 			#pragma multi_compile_fog
 			
 			#include "UnityCG.cginc"
-			#include "ProceduralLibrary2D.cginc"
+			#include "ProceduralLibrary3D.cginc"
 
 			struct appdata
 			{
@@ -35,16 +32,18 @@
 				float2 uv : TEXCOORD0;
 				UNITY_FOG_COORDS(1)
 				float4 vertex : SV_POSITION;
+				float3 WSPos: TEXCOORD1;
 			};
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			int _Division;
+			float4 _TileSize;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
+				o.WSPos = mul(unity_ObjectToWorld, v.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
@@ -52,12 +51,13 @@
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
+				float intensity = 1.0;
+				//Grid3D(abs(i.WSPos.xyz), float3 (0.2, 0.2, 0.2), float3(0.3, 0.3, 0.3), intensity);
+				//CheckBoard3D(i.WSPos.xyz, _TileSize.xyz, intensity);
+				Bricks3D(i.WSPos.xyz, _TileSize.xyz, float3(0.2, 0.2, 0.2), intensity);
+				fixed4 col = float4(intensity, intensity, intensity, 1.0);
+				//fixed4 col = float4(i.WSPos.xyz, 1.0);
 				// sample the texture
-				float intensity = 0.0;
-			//CheckerBoardAA(i.uv, float(_Division), intensity);
-			SphereGrid(i.uv, float(_Division), 0.3, intensity);
-			//Bricks(i.uv, float2 (2.0, 3.0), 0.02, intensity);
-			fixed4 col = float4(intensity, intensity, intensity, intensity);
 				//fixed4 col = tex2D(_MainTex, i.uv);
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);

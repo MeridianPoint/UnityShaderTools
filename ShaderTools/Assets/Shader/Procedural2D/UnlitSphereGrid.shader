@@ -1,4 +1,4 @@
-﻿Shader "Unlit/TestProceduralUnlit"
+﻿Shader "Procedural2D/UnlitSphereGrid"
 {
 	Properties
 	{
@@ -7,11 +7,8 @@
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
+		Tags { "RenderType"="Opaque" }
 		LOD 100
-
-			ZWrite Off
-			Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass
 		{
@@ -39,7 +36,7 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			int _Division;
+			float _Division;
 			
 			v2f vert (appdata v)
 			{
@@ -55,10 +52,9 @@
 				// sample the texture
 				float intensity = 0.0;
 			//CheckerBoardAA(i.uv, float(_Division), intensity);
-			SphereGrid(i.uv, float(_Division), 0.3, intensity);
+			SphereGridAA(i.uv, float(_Division), 0.3, intensity);
 			//Bricks(i.uv, float2 (2.0, 3.0), 0.02, intensity);
 			fixed4 col = float4(intensity, intensity, intensity, intensity);
-				//fixed4 col = tex2D(_MainTex, i.uv);
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;

@@ -1,17 +1,16 @@
-﻿Shader "Unlit/TestProceduralUnlit"
+﻿Shader "Unlit/TestUIUnlit"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Division("division", Int) = 4
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent" }
+		Tags{ "Queue" = "Transparent" "RenderType" = "Transparent" }
 		LOD 100
 
-			ZWrite Off
-			Blend SrcAlpha OneMinusSrcAlpha
+		ZWrite Off
+		Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass
 		{
@@ -22,7 +21,6 @@
 			#pragma multi_compile_fog
 			
 			#include "UnityCG.cginc"
-			#include "ProceduralLibrary2D.cginc"
 
 			struct appdata
 			{
@@ -39,7 +37,6 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			int _Division;
 			
 			v2f vert (appdata v)
 			{
@@ -53,12 +50,7 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				// sample the texture
-				float intensity = 0.0;
-			//CheckerBoardAA(i.uv, float(_Division), intensity);
-			SphereGrid(i.uv, float(_Division), 0.3, intensity);
-			//Bricks(i.uv, float2 (2.0, 3.0), 0.02, intensity);
-			fixed4 col = float4(intensity, intensity, intensity, intensity);
-				//fixed4 col = tex2D(_MainTex, i.uv);
+				fixed4 col = tex2D(_MainTex, i.uv);
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
