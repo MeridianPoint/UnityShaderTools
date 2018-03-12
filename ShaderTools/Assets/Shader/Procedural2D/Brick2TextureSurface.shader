@@ -47,7 +47,9 @@
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 			// Albedo comes from a texture tinted by color
 			float intensity = 0.0;
-			BricksAA(IN.uv_MainTex, _Division.xy, _Border, intensity);
+			float2 ddxUV = ddx(IN.uv_MainTex);
+			float2 ddyUV = ddy(IN.uv_MainTex);
+			BricksAA(IN.uv_MainTex, ddxUV, ddyUV, _Division.xy, _Border, intensity);
 			fixed4 cMain = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 			fixed4 cSecond = tex2D(_SecondTex, IN.uv_SecondTex) * _Color;
 			fixed4 c = cMain * intensity + (1.0 - intensity) * cSecond;

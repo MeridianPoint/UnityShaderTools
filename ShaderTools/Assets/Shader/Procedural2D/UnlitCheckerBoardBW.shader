@@ -51,7 +51,9 @@
 		{
 			// sample the texture
 			float intensity = 0.0;
-		CheckerBoardAA(i.uv, float(_Division), intensity);
+		float2 ddxUV = ddx(i.uv);
+		float2 ddyUV = ddy(i.uv);
+		CheckerBoardAA(i.uv, ddxUV, ddyUV, float(_Division), intensity);
 		fixed4 col = float4(intensity, intensity, intensity, 1.0);
 		//fixed4 col = tex2D(_MainTex, i.uv);
 		// apply fog

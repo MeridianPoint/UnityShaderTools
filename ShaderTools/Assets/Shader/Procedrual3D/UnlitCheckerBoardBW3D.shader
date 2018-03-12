@@ -53,7 +53,9 @@
 			{
 				float intensity = 1.0;
 			//Grid3D(abs(i.WSPos.xyz), float3 (0.2, 0.2, 0.2), float3(0.3, 0.3, 0.3), intensity);
-			CheckBoard3D(i.WSPos.xyz, _TileSize.xyz, intensity);
+			float3 ddposX = ddx(i.WSPos).xyz;
+			float3 ddposY = ddy(i.WSPos).xyz;
+			CheckBoard3DAA(i.WSPos.xyz, ddposX, ddposY, _TileSize.xyz, intensity);
 			fixed4 col = float4(intensity, intensity, intensity, 1.0);
 			//fixed4 col = float4(i.WSPos.xyz, 1.0);
 			// sample the texture

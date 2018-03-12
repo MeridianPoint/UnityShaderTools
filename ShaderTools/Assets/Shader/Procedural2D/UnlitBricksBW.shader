@@ -54,7 +54,9 @@
 				// sample the texture
 
 				float intensity = 0.0;
-				BricksAA(i.uv, _Division.xy, _Border, intensity);
+				float2 ddUVX = ddx(i.uv);
+				float2 ddUVY = ddy(i.uv);
+				BricksAA(i.uv, ddUVX, ddUVY, _Division.xy, _Border, intensity);
 				fixed4 col = float4(intensity, intensity, intensity, 1.0);
 				//fixed4 col = tex2D(_MainTex, i.uv);
 				// apply fog

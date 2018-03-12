@@ -1,15 +1,17 @@
-﻿Shader "Procedural2D/UnlitSphereGrid"
+﻿Shader "Unlit/Hologram"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Division("division", Int) = 4
 	}
 	SubShader
 	{
 		Tags { "RenderType"="Opaque" }
 		LOD 100
 
+		// zwrite pass
+
+		//coloring pass
 		Pass
 		{
 			CGPROGRAM
@@ -19,7 +21,6 @@
 			#pragma multi_compile_fog
 			
 			#include "UnityCG.cginc"
-			#include "ProceduralLibrary2D.cginc"
 
 			struct appdata
 			{
@@ -36,7 +37,6 @@
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			float _Division;
 			
 			v2f vert (appdata v)
 			{
@@ -50,13 +50,7 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				// sample the texture
-				float intensity = 0.0;
-			//CheckerBoardAA(i.uv, float(_Division), intensity);
-			float2 ddUVX = ddx(i.uv);
-			float2 ddUVY = ddy(i.uv);
-			SphereGridAA(i.uv,ddUVX, ddUVY, float(_Division), 0.3, intensity);
-			//Bricks(i.uv, float2 (2.0, 3.0), 0.02, intensity);
-			fixed4 col = float4(intensity, intensity, intensity, intensity);
+				fixed4 col = tex2D(_MainTex, i.uv);
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
